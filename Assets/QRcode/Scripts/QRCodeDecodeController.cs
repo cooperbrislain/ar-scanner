@@ -37,6 +37,7 @@ public class QRCodeDecodeController : MonoBehaviour
 	#endif
 	bool isInit = false;
 	BarcodeReader barReader;
+
 	void Start()
 	{
 		barReader = new BarcodeReader ();

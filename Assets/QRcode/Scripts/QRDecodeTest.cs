@@ -8,21 +8,56 @@ public class QRDecodeTest : MonoBehaviour
 {
 	public QRCodeDecodeController e_qrController;
 
-	public Text UiText;
-
+	public Text       UiText;
 	public GameObject resetBtn;
-
 	public GameObject scanLineObj;
+
+
+    public Canvas LEDProperties;
+    public Canvas QRScanner;
+    public Text   SelectedLEDList;
+
+
+    public GameObject ScannerCameraPlane;
+
+
 	#if UNITY_ANDROID && !UNITY_EDITOR
 	bool isTorchOn = false;
 	#endif
 	public Sprite torchOnSprite;
 	public Sprite torchOffSprite;
-	public Image torchImage;
-	/// <summary>
-	/// when you set the var is true,if the result of the decode is web url,it will open with browser.
-	/// </summary>
-	public bool isOpenBrowserIfUrl;
+	public Image  torchImage;
+
+    public void ScanQRCode()
+    {
+        QRScanner.gameObject.SetActive(true);
+        LEDProperties.gameObject.SetActive(false);
+        ScannerCameraPlane.SetActive(true);
+        Play();
+    }
+    public void ShowLEDProperties()
+    {
+        Stop();
+        ScannerCameraPlane.SetActive(false);
+        QRScanner.gameObject.SetActive(false);
+        LEDProperties.gameObject.SetActive(true);        
+    }
+    public void ClearLEDList()
+    {
+        SelectedLEDList.text = "";
+    }
+    public void NotifyAllCheckIn()
+    {
+        
+    }
+    public void NotifyAllWorking()
+    {
+        
+    }
+    public void NotifyAllBroken()
+    {
+        
+    }
 
 	private void Start()
 	{
@@ -32,57 +67,46 @@ public class QRDecodeTest : MonoBehaviour
 		}
 	}
 
-	private void Update()
-	{
-	}
-
 	private void qrScanFinished(string dataText)
 	{
-		if (isOpenBrowserIfUrl) {
-			if (Utility.CheckIsUrlFormat(dataText))
-			{
-				if (!dataText.Contains("http://") && !dataText.Contains("https://"))
-				{
-					dataText = "http://" + dataText;
-				}
-				Application.OpenURL(dataText);
-			}
-		}
-		this.UiText.text = dataText;
-		if (this.resetBtn != null)
-		{
-			this.resetBtn.SetActive(true);
-		}
-		if (this.scanLineObj != null)
-		{
-			this.scanLineObj.SetActive(false);
-		}
+        string LEDs = SelectedLEDList.text;
+        if (LEDs.Equals(""))
+        {
+            LEDs += dataText;
+        } else {
+            LEDs += "\n" + dataText;
+        }
+        SelectedLEDList.text = LEDs;
+
+                       
+        ShowLEDProperties();
+
+
+		//if (isOpenBrowserIfUrl) {
+		//	if (Utility.CheckIsUrlFormat(dataText))
+		//	{
+		//		if (!dataText.Contains("http://") && !dataText.Contains("https://"))
+		//		{
+		//			dataText = "http://" + dataText;
+		//		}
+		//		Application.OpenURL(dataText);
+		//	}
+		//}
+		//this.UiText.text = dataText;
+		//if (this.resetBtn != null)
+		//{
+		//	this.resetBtn.SetActive(true);
+		//}
+		//if (this.scanLineObj != null)
+		//{
+		//	this.scanLineObj.SetActive(false);
+		//}
 
 	}
 
-	public void Reset()
-	{
-		if (this.e_qrController != null)
-		{
-			this.e_qrController.Reset();
-		}
-		if (this.UiText != null)
-		{
-			this.UiText.text = string.Empty;
-		}
-		if (this.resetBtn != null)
-		{
-			this.resetBtn.SetActive(false);
-		}
-		if (this.scanLineObj != null)
-		{
-			this.scanLineObj.SetActive(true);
-		}
-	}
 
 	public void Play()
 	{
-		Reset ();
 		if (this.e_qrController != null)
 		{
 			this.e_qrController.StartWork();
@@ -106,15 +130,15 @@ public class QRDecodeTest : MonoBehaviour
 		}
 	}
 
-	public void GotoNextScene(string scenename)
-	{
-		if (this.e_qrController != null)
-		{
-			this.e_qrController.StopWork();
-		}
-		//Application.LoadLevel(scenename);
-		SceneManager.LoadScene(scenename);
-	}
+	//public void GotoNextScene(string scenename)
+	//{
+	//	if (this.e_qrController != null)
+	//	{
+	//		this.e_qrController.StopWork();
+	//	}
+	//	//Application.LoadLevel(scenename);
+	//	SceneManager.LoadScene(scenename);
+	//}
 
 	/// <summary>
 	/// Toggles the torch by click the ui button

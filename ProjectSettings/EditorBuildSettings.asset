@@ -6,5 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/QRcode/Scene/QRScanScene.unity
-    guid: 3ea0e74dd14b4334ca6665a61d8e0cbe
+    path: Assets/LEDScanner.unity
+    guid: baedd664210e943e69c8ea4529b3442b
